@@ -1,0 +1,17 @@
+{
+  "name": "invalsi-quiz",
+  "version": "1.0.0",
+  "description": "Simulatore prove INVALSI di Inglese - Quinta Primaria",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "express": "^4.21.0"
+  }
+}
