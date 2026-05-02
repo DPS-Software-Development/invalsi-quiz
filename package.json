@@ -4,14 +4,13 @@
   "description": "Simulatore prove INVALSI di Inglese - Quinta Primaria",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "node server.js"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "20.x"
   },
   "dependencies": {
-    "better-sqlite3": "^11.3.0",
+    "better-sqlite3": "^11.5.0",
     "express": "^4.21.0"
   }
 }
