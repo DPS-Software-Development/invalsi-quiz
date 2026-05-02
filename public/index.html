@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>INVALSI Inglese - Quinta Primaria</title>
+<style>
+:root {
+  --bg: #f4f7fb; --card: #ffffff; --primary: #2563eb; --primary-d: #1d4ed8;
+  --green: #16a34a; --red: #dc2626; --warn: #d97706;
+  --txt: #0f172a; --muted: #64748b; --border: #e2e8f0;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--txt); }
+.container { max-width: 760px; margin: 0 auto; padding: 16px; }
+.card { background: var(--card); border-radius: 16px; box-shadow: 0 4px 20px rgba(15,23,42,.06); padding: 24px; margin-bottom: 16px; }
+h1 { font-size: 1.6rem; margin: 0 0 8px; }
+h2 { font-size: 1.25rem; margin: 0 0 12px; }
+h3 { font-size: 1.05rem; margin: 0 0 12px; color: var(--muted); font-weight: 600; }
+p { line-height: 1.55; }
+.muted { color: var(--muted); font-size: .95rem; }
+.btn { background: var(--primary); color: white; border: none; padding: 12px 18px; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; min-height: 44px; }
+.btn:hover { background: var(--primary-d); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); }
+.btn-secondary:hover { background: var(--primary); color: white; }
+.btn-small { padding: 8px 14px; font-size: .9rem; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+input[type=text], select { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 10px; font-size: 1rem; font-family: inherit; }
+input[type=text]:focus, select:focus { outline: none; border-color: var(--primary); }
+label { display: block; margin: 12px 0 6px; font-weight: 600; color: var(--muted); }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.opt { display: flex; align-items: flex-start; gap: 12px; padding: 14px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; transition: all .15s; user-select: none; }
+.opt:hover { border-color: var(--primary); background: #f8fafc; }
+.opt.sel { border-color: var(--primary); background: #eff6ff; }
+.opt.correct { border-color: var(--green); background: #f0fdf4; }
+.opt.wrong { border-color: var(--red); background: #fef2f2; }
+.opt-letter { background: var(--primary); color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+.opt.correct .opt-letter { background: var(--green); }
+.opt.wrong .opt-letter { background: var(--red); }
+.passage { background: #f8fafc; border-left: 4px solid var(--primary); padding: 14px 16px; border-radius: 8px; margin: 12px 0; line-height: 1.7; }
+.passage h4 { margin: 0 0 8px; color: var(--muted); font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; }
+.progress { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin-bottom: 16px; }
+.progress-bar { height: 100%; background: var(--primary); transition: width .3s; }
+.feedback { padding: 14px; border-radius: 10px; margin-top: 16px; font-weight: 500; }
+.feedback.ok { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.feedback.no { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+.feedback small { display: block; margin-top: 6px; font-weight: normal; }
+.score-big { font-size: 4rem; font-weight: 700; color: var(--primary); text-align: center; line-height: 1; margin: 16px 0; }
+.score-label { text-align: center; color: var(--muted); margin-bottom: 24px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 16px 0; }
+.stat { background: #f8fafc; padding: 12px; border-radius: 10px; text-align: center; }
+.stat-val { font-size: 1.4rem; font-weight: 700; }
+.stat-lbl { font-size: .8rem; color: var(--muted); text-transform: uppercase; }
+.lb-row { display: grid; grid-template-columns: 32px 1fr auto auto; gap: 10px; align-items: center; padding: 10px; border-bottom: 1px solid var(--border); }
+.lb-row:last-child { border-bottom: none; }
+.lb-rank { font-weight: 700; color: var(--muted); text-align: center; }
+.lb-rank.top { color: var(--warn); font-size: 1.1rem; }
+.lb-name { font-weight: 600; }
+.lb-meta { font-size: .8rem; color: var(--muted); }
+.lb-score { font-weight: 700; color: var(--primary); }
+.hidden { display: none !important; }
+.error { background: #fef2f2; color: #991b1b; padding: 12px; border-radius: 10px; margin: 12px 0; }
+.tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.tab { padding: 8px 14px; background: white; border: 2px solid var(--border); border-radius: 100px; cursor: pointer; font-size: .9rem; font-weight: 500; }
+.tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+.review-q { padding: 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; background: #fef2f2; }
+.review-q .your { color: var(--red); }
+.review-q .right { color: var(--green); }
+@media (max-width: 480px) { .container { padding: 12px; } .card { padding: 18px; } .score-big { font-size: 3rem; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- WELCOME -->
+  <div id="screen-welcome" class="card">
+    <h1>📚 INVALSI Inglese</h1>
+    <h3>Quinta Primaria — esercitazione con punteggio</h3>
+    <p>Inserisci il tuo nome per iniziare. Apparirai in classifica!</p>
+    <label for="nameInput">Il tuo nome</label>
+    <input type="text" id="nameInput" maxlength="30" placeholder="Es. Sofia">
+    <div style="height:14px"></div>
+    <div class="btn-row">
+      <button class="btn" id="btnStart">Continua →</button>
+      <button class="btn btn-secondary" id="btnLeaderboardWelcome">🏆 Classifica</button>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="screen-settings" class="card hidden">
+    <h2>Ciao <span id="hiName"></span>! 👋</h2>
+    <h3>Scegli come fare la prova</h3>
+
+    <label>Modalità</label>
+    <div class="options" id="modeOpts">
+      <div class="opt" data-val="allenamento">
+        <div class="opt-letter">📖</div>
+        <div><b>Allenamento</b><br><small class="muted">Vedi subito se hai indovinato + spiegazione</small></div>
+      </div>
+      <div class="opt" data-val="simulazione">
+        <div class="opt-letter">⏱️</div>
+        <div><b>Simulazione</b><br><small class="muted">Come la prova vera: feedback solo alla fine</small></div>
+      </div>
+    </div>
+
+    <label>Cosa vuoi fare</label>
+    <select id="selScope">
+      <option value="all">Tutti i task disponibili</option>
+      <option value="reading">Solo Reading (lettura)</option>
+      <option value="2023-2024">Solo prova 2023-2024</option>
+      <option value="2022-2023">Solo prova 2022-2023</option>
+    </select>
+
+    <label>Quante domande</label>
+    <select id="selCount">
+      <option value="5">5 domande</option>
+      <option value="10" selected>10 domande</option>
+      <option value="15">15 domande</option>
+      <option value="20">20 domande</option>
+      <option value="all">Tutte</option>
+    </select>
+
+    <div style="height:18px"></div>
+    <div class="btn-row">
+      <button class="btn" id="btnGo">Inizia! 🚀</button>
+      <button class="btn btn-secondary" id="btnBackWelcome">← Indietro</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="card hidden">
+    <div class="progress"><div class="progress-bar" id="progBar"></div></div>
+    <div class="muted" style="font-size:.85rem; margin-bottom:8px;">
+      <span id="qIdx">1</span>/<span id="qTotal">10</span>
+      · <span id="taskTitle"></span>
+    </div>
+    <div id="passageBox"></div>
+    <h2 id="qText" style="margin-top:14px; font-size:1.15rem; line-height:1.4;"></h2>
+    <div class="options" id="optsBox"></div>
+    <div id="feedbackBox"></div>
+    <div style="height:18px"></div>
+    <div class="btn-row">
+      <button class="btn" id="btnNext" disabled>Conferma risposta</button>
+      <button class="btn btn-secondary btn-small" id="btnQuit">Esci</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="screen-results" class="card hidden">
+    <h2 style="text-align:center;">Hai finito! 🎉</h2>
+    <div class="score-big" id="scoreVoto">—/10</div>
+    <div class="score-label" id="scoreLabel"></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-val" id="stCorrect">0</div><div class="stat-lbl">Corrette</div></div>
+      <div class="stat"><div class="stat-val" id="stWrong">0</div><div class="stat-lbl">Sbagliate</div></div>
+      <div class="stat"><div class="stat-val" id="stTime">0:00</div><div class="stat-lbl">Tempo</div></div>
+    </div>
+    <div id="reviewBox"></div>
+    <div style="height:14px"></div>
+    <div class="btn-row">
+      <button class="btn" id="btnRetry">🔁 Nuova prova</button>
+      <button class="btn btn-secondary" id="btnReview" style="display:none;">✏️ Ripassa le sbagliate</button>
+      <button class="btn btn-secondary" id="btnLeaderboardR">🏆 Classifica</button>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD -->
+  <div id="screen-leaderboard" class="card hidden">
+    <h2>🏆 Classifica</h2>
+    <p class="muted">Ordinata per voto, poi per tempo (più veloce è meglio).</p>
+    <div id="lbList"></div>
+    <div style="height:14px"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btnBackToHome">← Torna all'inizio</button>
+    </div>
+  </div>
+
+  <div id="errorBox" class="error hidden"></div>
+</div>
+
+<script>
+// ---------- STATE ----------
+const state = {
+  name: '',
+  mode: 'allenamento',     // 'allenamento' | 'simulazione'
+  scope: 'all',
+  count: 10,
+  pool: [],                // tutti i task disponibili
+  questions: [],           // domande estratte per questa prova
+  current: 0,
+  answers: [],             // [{ qIdx, given, correct, isCorrect, ... }]
+  startTs: 0,
+  endTs: 0
+};
+
+// ---------- HELPERS ----------
+const $ = sel => document.querySelector(sel);
+const show = id => {
+  ['screen-welcome','screen-settings','screen-quiz','screen-results','screen-leaderboard']
+    .forEach(s => $('#'+s).classList.add('hidden'));
+  $('#'+id).classList.remove('hidden');
+  window.scrollTo(0,0);
+};
+const showErr = msg => { const e = $('#errorBox'); e.textContent = msg; e.classList.remove('hidden'); setTimeout(()=>e.classList.add('hidden'), 4000); };
+function shuffle(arr) { const a = arr.slice(); for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function fmtTime(s) { const m = Math.floor(s/60); const r = s%60; return m + ':' + (r<10?'0':'') + r; }
+function calcVoto(correct, total) { return total ? Math.round((correct / total) * 10 * 100) / 100 : 0; }
+
+// ---------- DATA LOAD ----------
+async function loadQuizData() {
+  try {
+    const r = await fetch('/api/quiz-data');
+    const data = await r.json();
+    state.pool = data.quizzes || [];
+    if (!state.pool.length) showErr('Nessuna domanda disponibile');
+  } catch (e) {
+    showErr('Errore nel caricamento delle domande');
+  }
+}
+
+// ---------- BUILD QUESTION SET ----------
+function buildQuestions() {
+  // Filtra task per scope
+  let tasks = state.pool;
+  if (state.scope === 'reading') tasks = tasks.filter(t => t.section === 'reading');
+  else if (state.scope === '2023-2024') tasks = tasks.filter(t => t.year === '2023-2024');
+  else if (state.scope === '2022-2023') tasks = tasks.filter(t => t.year === '2022-2023');
+
+  // Estrai tutte le sotto-domande con il loro task di appartenenza
+  let all = [];
+  tasks.forEach(task => {
+    task.questions.forEach((q, qi) => {
+      all.push({
+        taskId: task.id, taskTitle: task.title, taskType: task.type, taskInstr: task.instructions,
+        passage: task.passage, options: task.options || null,
+        qId: q.id, text: q.text, correct: q.answer, explain: q.explain || ''
+      });
+    });
+  });
+
+  // Shuffle e limita
+  all = shuffle(all);
+  const limit = state.count === 'all' ? all.length : Math.min(parseInt(state.count, 10), all.length);
+  state.questions = all.slice(0, limit);
+}
+
+// ---------- RENDER A QUESTION ----------
+function renderQuestion() {
+  const q = state.questions[state.current];
+  if (!q) return finish();
+
+  $('#qIdx').textContent = state.current + 1;
+  $('#qTotal').textContent = state.questions.length;
+  $('#progBar').style.width = ((state.current) / state.questions.length * 100) + '%';
+  $('#taskTitle').textContent = q.taskTitle;
+
+  // Passage box
+  const pb = $('#passageBox');
+  if (q.passage) {
+    pb.innerHTML = '<div class="passage"><h4>📄 Testo</h4>' +
+      q.passage.replace(/\n/g, '<br>') + '</div>';
+  } else { pb.innerHTML = ''; }
+
+  $('#qText').textContent = q.text;
+
+  // Render options based on type
+  const ob = $('#optsBox');
+  ob.innerHTML = '';
+  let optList;
+  if (q.taskType === 'tfn') {
+    optList = [
+      { letter: 'T', text: 'True (vero)' },
+      { letter: 'F', text: 'False (falso)' },
+      { letter: 'NG', text: 'Not given (non detto)' }
+    ];
+  } else if (q.options && q.options.length) {
+    optList = q.options.map(o => ({ letter: o.letter, text: o.text }));
+  } else {
+    optList = [
+      { letter: 'A', text: 'A' }, { letter: 'B', text: 'B' },
+      { letter: 'C', text: 'C' }, { letter: 'D', text: 'D' }
+    ];
+  }
+
+  optList.forEach(o => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.val = o.letter;
+    div.innerHTML = '<div class="opt-letter">' + o.letter + '</div><div>' + o.text + '</div>';
+    div.addEventListener('click', () => selectOpt(div, o.letter));
+    ob.appendChild(div);
+  });
+
+  $('#feedbackBox').innerHTML = '';
+  $('#btnNext').disabled = true;
+  $('#btnNext').textContent = 'Conferma risposta';
+  state.currentSelection = null;
+}
+
+function selectOpt(div, letter) {
+  // already-answered guard
+  if (div.parentElement.dataset.locked) return;
+  document.querySelectorAll('.opt').forEach(o => o.classList.remove('sel'));
+  div.classList.add('sel');
+  state.currentSelection = letter;
+  $('#btnNext').disabled = false;
+}
+
+// ---------- ANSWER FLOW ----------
+function confirmAnswer() {
+  if (!state.currentSelection) return;
+  const q = state.questions[state.current];
+  const isCorrect = state.currentSelection === q.correct;
+  state.answers.push({
+    idx: state.current,
+    qText: q.text, taskTitle: q.taskTitle,
+    given: state.currentSelection, correct: q.correct,
+    isCorrect, explain: q.explain
+  });
+
+  if (state.mode === 'allenamento') {
+    // mostra feedback immediato e blocca
+    $('#optsBox').dataset.locked = '1';
+    document.querySelectorAll('.opt').forEach(o => {
+      const v = o.dataset.val;
+      o.classList.remove('sel');
+      if (v === q.correct) o.classList.add('correct');
+      else if (v === state.currentSelection) o.classList.add('wrong');
+    });
+    const fb = $('#feedbackBox');
+    if (isCorrect) {
+      fb.innerHTML = '<div class="feedback ok">✅ Giusto!' + (q.explain ? '<small>' + q.explain + '</small>' : '') + '</div>';
+    } else {
+      fb.innerHTML = '<div class="feedback no">❌ Sbagliato. La risposta giusta è <b>' + q.correct + '</b>.' + (q.explain ? '<small>' + q.explain + '</small>' : '') + '</div>';
+    }
+    $('#btnNext').textContent = (state.current + 1 >= state.questions.length) ? 'Vedi risultati →' : 'Prossima domanda →';
+    $('#btnNext').disabled = false;
+    $('#btnNext').onclick = () => { delete $('#optsBox').dataset.locked; state.current++; if (state.current>=state.questions.length) finish(); else renderQuestion(); attachNext(); };
+  } else {
+    // simulazione: prossima domanda subito
+    state.current++;
+    if (state.current >= state.questions.length) finish();
+    else renderQuestion();
+  }
+}
+
+function attachNext() {
+  $('#btnNext').onclick = confirmAnswer;
+}
+
+// ---------- FINISH ----------
+async function finish() {
+  state.endTs = Date.now();
+  const correct = state.answers.filter(a => a.isCorrect).length;
+  const total = state.answers.length;
+  const voto = calcVoto(correct, total);
+  const dur = Math.round((state.endTs - state.startTs) / 1000);
+
+  $('#scoreVoto').textContent = voto + '/10';
+  $('#scoreLabel').textContent = correct + ' su ' + total + ' corrette';
+  $('#stCorrect').textContent = correct;
+  $('#stWrong').textContent = total - correct;
+  $('#stTime').textContent = fmtTime(dur);
+
+  // Review delle sbagliate
+  const wrongs = state.answers.filter(a => !a.isCorrect);
+  const rb = $('#reviewBox');
+  if (wrongs.length) {
+    rb.innerHTML = '<h3 style="margin-top:20px;">Le risposte sbagliate</h3>' + wrongs.map(w => (
+      '<div class="review-q">' +
+      '<b>' + w.taskTitle + '</b><br>' +
+      w.qText + '<br>' +
+      '<span class="your">La tua: ' + w.given + '</span> → <span class="right">Giusta: ' + w.correct + '</span>' +
+      (w.explain ? '<br><small class="muted">' + w.explain + '</small>' : '') +
+      '</div>'
+    )).join('');
+    $('#btnReview').style.display = '';
+  } else {
+    rb.innerHTML = '<h3 style="margin-top:20px; text-align:center; color: var(--green);">Perfetto! Nessuna sbagliata 🌟</h3>';
+    $('#btnReview').style.display = 'none';
+  }
+
+  show('screen-results');
+
+  // Salva punteggio
+  try {
+    await fetch('/api/scores', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name: state.name, mode: state.mode, scope: state.scope, total, correct, voto, durationSec: dur })
+    });
+  } catch(e) { /* silent */ }
+}
+
+// ---------- REVIEW ONLY WRONG ----------
+function reviewWrong() {
+  const wrongs = state.answers.filter(a => !a.isCorrect);
+  if (!wrongs.length) return;
+  // Re-build questions from the wrong ones
+  state.questions = wrongs.map(w => {
+    // Trova il task originale per recuperare passage e opzioni
+    const task = state.pool.find(t => t.title === w.taskTitle);
+    return {
+      taskId: task.id, taskTitle: task.title, taskType: task.type, taskInstr: task.instructions,
+      passage: task.passage, options: task.options || null,
+      qId: w.qId, text: w.qText, correct: w.correct, explain: w.explain
+    };
+  });
+  state.questions = shuffle(state.questions);
+  state.current = 0;
+  state.answers = [];
+  state.startTs = Date.now();
+  show('screen-quiz');
+  renderQuestion();
+  attachNext();
+}
+
+// ---------- LEADERBOARD ----------
+async function loadLeaderboard() {
+  try {
+    const r = await fetch('/api/leaderboard');
+    const data = await r.json();
+    const list = $('#lbList');
+    if (!data.scores || !data.scores.length) {
+      list.innerHTML = '<p class="muted">Ancora nessun punteggio. Sii il primo!</p>';
+      return;
+    }
+    list.innerHTML = data.scores.map((s, i) => (
+      '<div class="lb-row">' +
+        '<div class="lb-rank' + (i<3?' top':'') + '">' + (i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)) + '</div>' +
+        '<div><div class="lb-name">' + escapeHtml(s.name) + '</div><div class="lb-meta">' + s.correct + '/' + s.total + ' · ' + fmtTime(s.durationSec) + ' · ' + s.scope + '</div></div>' +
+        '<div class="lb-score">' + s.voto + '/10</div>' +
+      '</div>'
+    )).join('');
+  } catch(e) { showErr('Impossibile caricare la classifica'); }
+}
+function escapeHtml(s) { return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// ---------- WIRING ----------
+$('#btnStart').onclick = () => {
+  const n = $('#nameInput').value.trim();
+  if (!n) { showErr('Inserisci il tuo nome'); return; }
+  state.name = n.slice(0, 30);
+  $('#hiName').textContent = state.name;
+  show('screen-settings');
+};
+$('#btnBackWelcome').onclick = () => show('screen-welcome');
+$('#btnLeaderboardWelcome').onclick = async () => { await loadLeaderboard(); show('screen-leaderboard'); };
+$('#btnBackToHome').onclick = () => show('screen-welcome');
+$('#btnLeaderboardR').onclick = async () => { await loadLeaderboard(); show('screen-leaderboard'); };
+
+document.querySelectorAll('#modeOpts .opt').forEach(o => {
+  o.addEventListener('click', () => {
+    document.querySelectorAll('#modeOpts .opt').forEach(x => x.classList.remove('sel'));
+    o.classList.add('sel');
+    state.mode = o.dataset.val;
+  });
+});
+document.querySelector('#modeOpts .opt[data-val=allenamento]').classList.add('sel');
+
+$('#btnGo').onclick = () => {
+  state.mode = document.querySelector('#modeOpts .opt.sel').dataset.val;
+  state.scope = $('#selScope').value;
+  state.count = $('#selCount').value === 'all' ? 'all' : parseInt($('#selCount').value, 10);
+  buildQuestions();
+  if (!state.questions.length) { showErr('Nessuna domanda con questi filtri'); return; }
+  state.current = 0;
+  state.answers = [];
+  state.startTs = Date.now();
+  show('screen-quiz');
+  renderQuestion();
+  attachNext();
+};
+
+$('#btnQuit').onclick = () => { if (confirm('Sei sicuro di voler uscire? Perderai i progressi.')) show('screen-welcome'); };
+$('#btnRetry').onclick = () => show('screen-settings');
+$('#btnReview').onclick = reviewWrong;
+
+// Permetti Invio nel campo nome
+$('#nameInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('#btnStart').click(); });
+
+// ---------- BOOT ----------
+loadQuizData();
+</script>
+</body>
+</html>
