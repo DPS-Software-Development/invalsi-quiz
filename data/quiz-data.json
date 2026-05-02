@@ -1,0 +1,94 @@
+{
+  "version": "1.0.0",
+  "lastUpdate": "2026-05-02",
+  "quizzes": [
+    {
+      "id": "2023-2024-reading-t2",
+      "year": "2023-2024",
+      "section": "reading",
+      "title": "Reading 2023-2024 - My computer",
+      "type": "tfn",
+      "instructions": "Read about Sarah. Are the sentences true (T), false (F) or not given (NG)?",
+      "passage": "I live twenty minutes from my school, and I haven't got any brothers or sisters. My computer is very important to me because it helps me live my life in many ways. I can write or speak to my friends and do my homework on it, too. I use my computer to watch films and listen to music, and I like watching videos to learn new things. I love taking photographs with my camera and I put my photos on my computer. My computer is amazing, but when my friends come to visit me, we don't use it very much. We usually go outside and play in my garden. We only use my computer when it rains!",
+      "questions": [
+        {
+          "id": "q1",
+          "text": "She has got a sister.",
+          "answer": "F",
+          "explain": "Nel testo dice 'I haven't got any brothers or sisters'."
+        },
+        {
+          "id": "q2",
+          "text": "She talks to friends on her computer.",
+          "answer": "T",
+          "explain": "'I can write or speak to my friends'."
+        },
+        {
+          "id": "q3",
+          "text": "She uses her computer in the evening.",
+          "answer": "NG",
+          "explain": "Il testo non parla della sera."
+        },
+        {
+          "id": "q4",
+          "text": "She watches movies on her computer.",
+          "answer": "T",
+          "explain": "'I use my computer to watch films'."
+        },
+        {
+          "id": "q5",
+          "text": "She is a good singer.",
+          "answer": "NG",
+          "explain": "Il testo non dice se canta bene."
+        },
+        {
+          "id": "q6",
+          "text": "She plays with friends outside.",
+          "answer": "T",
+          "explain": "'We usually go outside and play in my garden'."
+        }
+      ]
+    },
+    {
+      "id": "2022-2023-reading-t3",
+      "year": "2022-2023",
+      "section": "reading",
+      "title": "Reading 2022-2023 - My pet",
+      "type": "tfn",
+      "instructions": "Read about Anne's pet. Are the sentences true (T), false (F) or not given (NG)?",
+      "passage": "I have a pet animal. My pet animal is a cat. Her name is Kitty. She is big, white and brown. She has a long tail. She has four kittens. They all are very cute. All of them are white. Fish is her favourite food. I give her milk every day. She can climb trees. She likes to play on my bed. I like to play with my Kitty. I love her very much.",
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Kitty is the girl's name.",
+          "answer": "F",
+          "explain": "Kitty e' il nome del gatto, non della bambina."
+        },
+        {
+          "id": "q2",
+          "text": "The girl's pet is black.",
+          "answer": "F",
+          "explain": "Il gatto e' bianco e marrone."
+        },
+        {
+          "id": "q3",
+          "text": "The pet has small ears.",
+          "answer": "NG",
+          "explain": "Il testo non parla delle orecchie."
+        },
+        {
+          "id": "q4",
+          "text": "The pet loves eating fish.",
+          "answer": "T",
+          "explain": "'Fish is her favourite food'."
+        },
+        {
+          "id": "q5",
+          "text": "The pet can run very fast.",
+          "answer": "NG",
+          "explain": "Il testo non dice se corre veloce."
+        }
+      ]
+    }
+  ]
+}
